@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard ENDES 2025 - INEI Perú | Monitoreo Demográfico y de Salud</title>
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Leaflet CSS for Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation (Matching Professor's structure) -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-circle">
+                    <i class="fa-solid fa-chart-pie"></i>
+                </div>
+                <h2>ENDES <span>2025</span></h2>
+                <p class="institution">INEI - Perú</p>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section-title">EN UN CLIC</div>
+                <a href="#" class="nav-item active" onclick="switchTab('resumen', event)"><i class="fa-solid fa-gauge-high"></i> Resumen Ejecutivo</a>
+                
+                <div class="nav-section-title">ANÁLISIS</div>
+                <a href="#" class="nav-item" onclick="switchTab('unidades', event)"><i class="fa-solid fa-map-location-dot"></i> Unidades Territoriales</a>
+                <a href="#" class="nav-item" onclick="switchTab('tablas', event)"><i class="fa-solid fa-table"></i> Resumen en Tablas</a>
+                <a href="#" class="nav-item" onclick="switchTab('estadisticas', event)"><i class="fa-solid fa-chart-column"></i> Gráficos y Estadísticas</a>
+                
+                <div class="nav-section-title">TERRITORIO</div>
+                <a href="#" class="nav-item" onclick="switchTab('mapa', event)"><i class="fa-solid fa-earth-americas"></i> Mapa Georreferenciado</a>
+            </nav>
+            <div class="sidebar-footer">
+                <p><i class="fa-solid fa-shield-halved"></i> Presupuesto por Resultados (PpR)</p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Header with Filters -->
+            <header class="top-header">
+                <div class="header-title">
+                    <h1 id="page-title">Resumen Ejecutivo - ENDES 2025</h1>
+                    <p>Encuesta Demográfica y de Salud Familiar | Monitoreo Nacional</p>
+                </div>
+                <div class="header-filters">
+                    <div class="filter-group">
+                        <label><i class="fa-solid fa-calendar-days"></i> Periodo:</label>
+                        <select id="filter-periodo" class="filter-select">
+                            <option value="2025">ENDES 2025</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label><i class="fa-solid fa-location-dot"></i> Ubicación:</label>
+                        <select id="filter-ubicacion" class="filter-select">
+                            <option value="todos">Todo el país (25 Dptos)</option>
+                        </select>
+                    </div>
+                    <button class="btn-clear" onclick="resetFilters()"><i class="fa-solid fa-rotate-left"></i> Limpiar</button>
+                </div>
+            </header>
+
+            <!-- Dynamic Tab Contents -->
+            <div class="dashboard-body">
+                
+                <!-- TAB 1: RESUMEN EJECUTIVO -->
+                <div id="tab-resumen" class="tab-content active">
+                    <section class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-icon blue"><i class="fa-solid fa-house-chimney"></i></div>
+                            <div class="kpi-info">
+                                <h3>Total Viviendas</h3>
+                                <p class="kpi-value" id="kpi-viviendas">37,331</p>
+                                <span class="kpi-trend positive"><i class="fa-solid fa-arrow-up"></i> 99.9% Cobertura</span>
+                            </div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-icon green"><i class="fa-solid fa-users"></i></div>
+                            <div class="kpi-info">
+                                <h3>Población Registrada</h3>
+                                <p class="kpi-value" id="kpi-poblacion">131,929</p>
+                                <span class="kpi-trend positive"><i class="fa-solid fa-user-check"></i> Residentes Habituales</span>
+                            </div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-icon purple"><i class="fa-solid fa-map-pin"></i></div>
+                            <div class="kpi-info">
+                                <h3>Conglomerados</h3>
+                                <p class="kpi-value" id="kpi-conglomerados">3,253</p>
+                                <span class="kpi-trend neutral"><i class="fa-solid fa-check"></i> Marco CPV 2017</span>
+                            </div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-icon orange"><i class="fa-solid fa-people-roof"></i></div>
+                            <div class="kpi-info">
+                                <h3>Promedio por Hogar</h3>
+                                <p class="kpi-value" id="kpi-promedio">3.53</p>
+                                <span class="kpi-trend positive"><i class="fa-solid fa-calculator"></i> Miembros/Hogar</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <div class="grid-section" style="margin-top: 1.5rem;">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><i class="fa-solid fa-building-columns"></i> Población por Departamento (Top 10)</h3>
+                                <span class="card-subtitle">Distribución demográfica principal según base RECH0</span>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="resumenChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><i class="fa-solid fa-circle-info"></i> Aspectos Metodológicos ENDES 2025</h3>
+                                <span class="card-subtitle">Ficha técnica y diseño muestral</span>
+                            </div>
+                            <div class="card-body-text">
+                                <p><strong>Objetivo:</strong> Proveer información actualizada sobre dinámica demográfica, salud materna e infantil, y condiciones socioeconómicas de los hogares peruanos [cite: 41].</p>
+                                <hr style="margin: 10px 0; border:0; border-top:1px solid #e2e8f0;">
+                                <p><strong>Población Objetivo:</strong> Hogares particulares y residentes habituales, mujeres de 12 a 49 años y niños menores de 5 años [cite: 41].</p>
+                                <hr style="margin: 10px 0; border:0; border-top:1px solid #e2e8f0;">
+                                <p><strong>Niveles de Inferencia:</strong> Representativo a nivel nacional, urbano/rural, regiones naturales (Costa, Sierra, Selva) y los 24 departamentos más la Provincia Constitucional del Callao [cite: 47].</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: UNIDADES TERRITORIALES -->
+                <div id="tab-unidades" class="tab-content" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-map-location-dot"></i> Unidades Territoriales y Conglomerados</h3>
+                            <span class="card-subtitle">Detalle de muestreo y altitud por departamento</span>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table" id="unidadesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Departamento</th>
+                                        <th>Latitud</th>
+                                        <th>Longitud</th>
+                                        <th>Total Viviendas</th>
+                                        <th>Población</th>
+                                        <th>Altitud Promedio</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="unidadesBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 3: RESUMEN EN TABLAS -->
+                <div id="tab-tablas" class="tab-content" style="display: none;">
+                    <div class="card">
+                        <div class="card-header flex-header">
+                            <div>
+                                ### <i class="fa-solid fa-table-list"></i> Matriz Consolidada de Indicadores ENDES
+                                <span class="card-subtitle">Buscador y filtro avanzado de registros</span>
+                            </div>
+                            <div class="table-search">
+                                <input type="text" id="searchInput" placeholder="Buscar departamento...">
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table" id="endesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Departamento</th>
+                                        <th>Viviendas Muestreadas</th>
+                                        <th>Población Estimada</th>
+                                        <th>Altitud (msnm)</th>
+                                        <th>Densidad Demográfica</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 4: GRÁFICOS Y ESTADÍSTICAS -->
+                <div id="tab-estadisticas" class="tab-content" style="display: none;">
+                    <div class="grid-section">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><i class="fa-solid fa-chart-bar"></i> Comparativa de Viviendas por Departamento</h3>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="viviendasChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><i class="fa-solid fa-mountain"></i> Altitud Geográfica Promedio (msnm)</h3>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="altitudChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 5: MAPA GEORREFERENCIADO (Con selector de capas tal como el profesor) -->
+                <div id="tab-mapa" class="tab-content" style="display: none;">
+                    <div class="card map-card-full">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-earth-americas"></i> Visor Cartográfico Interactivo - Perú (ENDES 2025)</h3>
+                            <span class="card-subtitle">Incluye selector de capas base (Estándar, Topográfico, Claro y Oscuro)</span>
+                        </div>
+                        <div class="map-container-full" id="peru-map"></div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="datos.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

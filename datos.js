@@ -1,0 +1,28 @@
+// Datos oficiales procesados de la Base ENDES 2025 (RECH0 - RECHM)
+const endesData = [
+    { departamento: "Amazonas", lat: -6.2289, lng: -77.8706, viviendas: 1509, poblacion: 5321, altitud: 1221.4 },
+    { departamento: "Ancash", lat: -9.5278, lng: -77.5278, viviendas: 1322, poblacion: 4615, altitud: 1815.1 },
+    { departamento: "Apurimac", lat: -13.6339, lng: -72.8814, viviendas: 1340, poblacion: 4086, altitud: 3129.4 },
+    { departamento: "Arequipa", lat: -16.4090, lng: -71.5375, viviendas: 1303, poblacion: 4551, altitud: 2224.0 },
+    { departamento: "Ayacucho", lat: -13.1588, lng: -74.2239, viviendas: 1500, poblacion: 5164, altitud: 2878.0 },
+    { departamento: "Cajamarca", lat: -7.1638, lng: -78.5003, viviendas: 1382, poblacion: 4207, altitud: 2314.3 },
+    { departamento: "Callao", lat: -12.0566, lng: -77.1181, viviendas: 1349, poblacion: 5027, altitud: 99.8 },
+    { departamento: "Cusco", lat: -13.5319, lng: -71.9675, viviendas: 1301, poblacion: 4046, altitud: 3134.2 },
+    { departamento: "Huancavelica", lat: -12.7865, lng: -74.9727, viviendas: 1425, poblacion: 4346, altitud: 3420.5 },
+    { departamento: "Huanuco", lat: -9.9306, lng: -76.2422, viviendas: 1512, poblacion: 5459, altitud: 2145.4 },
+    { departamento: "Ica", lat: -14.0678, lng: -75.7286, viviendas: 1334, poblacion: 5301, altitud: 328.6 },
+    { departamento: "Junin", lat: -12.0651, lng: -75.2049, viviendas: 1307, poblacion: 4416, altitud: 2555.4 },
+    { departamento: "La Libertad", lat: -8.1159, lng: -79.0299, viviendas: 1346, poblacion: 5336, altitud: 957.4 },
+    { departamento: "Lambayeque", lat: -6.7714, lng: -79.8409, viviendas: 1371, poblacion: 5295, altitud: 144.4 },
+    { departamento: "Lima", lat: -12.0464, lng: -77.0428, viviendas: 4829, poblacion: 16695, altitud: 302.2 },
+    { departamento: "Loreto", lat: -3.7491, lng: -73.2538, viviendas: 1315, poblacion: 5983, altitud: 125.7 },
+    { departamento: "Madre de Dios", lat: -12.5933, lng: -69.1891, viviendas: 1311, poblacion: 4759, altitud: 263.4 },
+    { departamento: "Moquegua", lat: -17.1945, lng: -70.9344, viviendas: 1307, poblacion: 4187, altitud: 1289.7 },
+    { departamento: "Pasco", lat: -10.6828, lng: -76.2572, viviendas: 1303, poblacion: 4059, altitud: 2866.3 },
+    { departamento: "Piura", lat: -5.1945, lng: -80.6328, viviendas: 1347, poblacion: 5616, altitud: 323.5 },
+    { departamento: "Puno", lat: -15.8402, lng: -70.0219, viviendas: 1315, poblacion: 3626, altitud: 3799.6 },
+    { departamento: "San Martin", lat: -6.6786, lng: -76.3533, viviendas: 1342, poblacion: 5260, altitud: 598.6 },
+    { departamento: "Tacna", lat: -18.0146, lng: -70.2536, viviendas: 1311, poblacion: 3950, altitud: 901.4 },
+    { departamento: "Tumbes", lat: -3.5669, lng: -80.4515, viviendas: 1320, poblacion: 5113, altitud: 22.6 },
+    { departamento: "Ucayali", lat: -8.3791, lng: -74.5539, viviendas: 1330, poblacion: 5511, altitud: 202.8 }
+];
